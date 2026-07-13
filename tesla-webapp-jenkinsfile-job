@@ -1,0 +1,31 @@
+node{
+    // variables defined here = available everywhere
+    //single line comment = //  
+    //multi-line comment = /* */
+    def mvnHome = tool 'Maven 3.9.16'
+    def appName = 'tesla-webapp'
+    
+    //For stages they include (){ and '' so = ('..'){  -and after each stage close it with--> }
+    //For code or command or dir path they include "" so = "${mavenHome}/bin/mvn sonar:sonar"
+    //For variables the syntax is ${} so = ${mavenHome}
+    
+    stage('1.clonecode'){
+        // code goes here
+        // can use mvnHome and appName
+        git "https://github.com/beryl-watang/maven-web-application"
+        //sh "git clone https://github.com/beryl-watang/maven-web-application"
+    }
+    
+    stage('2.mavenBuild'){
+        sh "${mvnHome}/bin/mvn package"
+        
+    }
+    
+    stage('3.CodeQualityAnalysis'){
+        sh "${mvnHome}/bin/mvn sonar:sonar"
+    }
+    
+    stage('4.UploadArtifacts'){
+        sh "${mvnHome}/bin/mvn deploy"
+    }
+}
